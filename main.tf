@@ -16,18 +16,21 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
-resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
+resource "google_sourcerepo_repository" "repository" {
   name = var.repository_name
 
   depends_on = [google_project_service.service]
 }
 
-# resource "google_cloudfunctions_function" "function" {
-#   name        = "function-test"
-#   description = "My function"
-#   runtime     = "python39"
+resource "google_cloudfunctions_function" "function" {
+  name    = "info"
+  runtime = "python39"
 
-#   available_memory_mb = 128
-#   trigger_http        = true
-#   entry_point         = "helloGET"
-# }
+  available_memory_mb = 128
+  trigger_http        = true
+  entry_point         = "info"
+
+  source_repository {
+    url = google_sourcerepo_repository.repository.url
+  }
+}
