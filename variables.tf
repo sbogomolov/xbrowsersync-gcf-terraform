@@ -6,11 +6,14 @@ variable "project_id" {
 variable "region" {
   description = "Google Cloud region"
   type        = string
-  default     = "europe-west4"
 }
 
 variable "zone" {
   description = "Google Cloud zone"
   type        = string
-  default     = "europe-west4-a"
+}
+
+variable "repository_name" {
+  description = "Gooogle Cloud Source repository to build cloud functions"
+  type        = string
 }
