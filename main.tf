@@ -16,6 +16,11 @@ resource "google_project_service" "sourcerepo" {
 
 resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
   name = var.repository_name
+
+  depends_on = [
+    google_project_service.sourcerepo,
+    google_project_service.cloudresourcemanager
+  ]
 }
 
 # resource "google_cloudfunctions_function" "function" {
