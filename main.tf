@@ -7,6 +7,7 @@ provider "google" {
 resource "google_project_service" "service" {
   for_each = toset([
     "cloudresourcemanager.googleapis.com",
+    "iam.googleapis.com",
     "serviceusage.googleapis.com",
     "sourcerepo.googleapis.com"
   ])
