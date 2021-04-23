@@ -4,18 +4,21 @@ provider "google" {
   zone    = var.zone
 }
 
-resource "google_project_services" "apis" {
-  services = [
-    "iam.googleapis.com",
-    "sourcerepo.googleapis.com",
-  ]
+resource "google_project_service" "apis" {
+  service                    = "iam.googleapis.com"
+  disable_dependent_services = true
 }
 
-resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
-  name = var.repository_name
+# resource "google_project_service" "apis" {
+#   service = "sourcerepo.googleapis.com"
+#   disable_dependent_services = true
+# }
 
-  #   depends_on = [google_project_service.apis]
-}
+# resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
+#   name = var.repository_name
+
+#   depends_on = [google_project_service.apis]
+# }
 
 # resource "google_cloudfunctions_function" "function" {
 #   name        = "function-test"
