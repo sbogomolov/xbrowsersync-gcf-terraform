@@ -17,27 +17,27 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
-resource "google_sourcerepo_repository" "repository" {
-  name = var.repository_name
+# resource "google_sourcerepo_repository" "repository" {
+#   name = var.repository_name
 
-  depends_on = [google_project_service.service]
-}
+#   depends_on = [google_project_service.service]
+# }
 
-resource "google_cloudfunctions_function" "info" {
-  name    = "info"
-  runtime = "python39"
-  region  = "us-central1" # Currently can be only "us-central1"
+# resource "google_cloudfunctions_function" "info" {
+#   name    = "info"
+#   runtime = "python39"
+#   region  = "us-central1" # Currently can be only "us-central1"
 
-  available_memory_mb = 128
-  trigger_http        = true
-  entry_point         = "info"
+#   available_memory_mb = 128
+#   trigger_http        = true
+#   entry_point         = "info"
 
-  source_repository {
-    url = google_sourcerepo_repository.repository.url
-  }
+#   source_repository {
+#     url = google_sourcerepo_repository.repository.url
+#   }
 
-  depends_on = [
-    google_project_service.service,
-    google_sourcerepo_repository.repository,
-  ]
-}
+#   depends_on = [
+#     google_project_service.service,
+#     google_sourcerepo_repository.repository,
+#   ]
+# }
