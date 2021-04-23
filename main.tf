@@ -16,16 +16,11 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
-# resource "google_project_service" "apis" {
-#   service = "sourcerepo.googleapis.com"
-#   disable_dependent_services = true
-# }
+resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
+  name = var.repository_name
 
-# resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
-#   name = var.repository_name
-
-#   depends_on = [google_project_service.apis]
-# }
+  depends_on = [google_project_service.service]
+}
 
 # resource "google_cloudfunctions_function" "function" {
 #   name        = "function-test"
