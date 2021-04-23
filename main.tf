@@ -26,7 +26,7 @@ resource "google_sourcerepo_repository" "repository" {
 resource "google_cloudfunctions_function" "info" {
   name    = "info"
   runtime = "python39"
-  region  = "us-central1" # Currently can be only "us-central1".
+  region  = "us-central1" # Currently can be only "us-central1"
 
   available_memory_mb = 128
   trigger_http        = true
