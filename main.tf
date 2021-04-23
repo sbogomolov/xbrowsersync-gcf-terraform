@@ -4,6 +4,11 @@ provider "google" {
   zone    = var.zone
 }
 
+resource "google_project_service" "cloudresourcemanager" {
+  service                    = "cloudresourcemanager.googleapis.com"
+  disable_dependent_services = true
+}
+
 resource "google_project_service" "sourcerepo" {
   service                    = "sourcerepo.googleapis.com"
   disable_dependent_services = true
