@@ -1,0 +1,8 @@
+#!/bin/sh
+
+formatted=$(terraform fmt -recursive)
+if [ "$formatted" != "" ]; then
+    echo "Some files were re-formatted:"
+    echo "$formatted"
+    exit 1
+fi

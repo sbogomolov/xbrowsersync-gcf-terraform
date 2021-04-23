@@ -1,6 +1,6 @@
 provider "google" {
-  region  = var.region
-  zone    = var.zone
+  region = var.region
+  zone   = var.zone
 }
 
 resource "random_id" "id" {
