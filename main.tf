@@ -4,11 +4,6 @@ provider "google" {
   zone    = var.zone
 }
 
-resource "google_project_service" "cloudresourcemanager" {
-  service                    = "cloudresourcemanager.googleapis.com"
-  disable_dependent_services = true
-}
-
 resource "google_project_service" "sourcerepo" {
   service                    = "sourcerepo.googleapis.com"
   disable_dependent_services = true
@@ -17,10 +12,7 @@ resource "google_project_service" "sourcerepo" {
 resource "google_sourcerepo_repository" "x-browser-sync-gcf" {
   name = var.repository_name
 
-  depends_on = [
-    google_project_service.sourcerepo,
-    google_project_service.cloudresourcemanager
-  ]
+  depends_on = [google_project_service.sourcerepo]
 }
 
 # resource "google_cloudfunctions_function" "function" {
