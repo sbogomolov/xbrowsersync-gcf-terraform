@@ -22,7 +22,7 @@ resource "google_sourcerepo_repository" "repository" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "info" {
   name    = "info"
   runtime = "python39"
 
