@@ -35,5 +35,8 @@ resource "google_cloudfunctions_function" "info" {
     url = google_sourcerepo_repository.repository.url
   }
 
-  depends_on = [google_sourcerepo_repository.repository]
+  depends_on = [
+    google_project_service.service,
+    google_sourcerepo_repository.repository,
+  ]
 }
