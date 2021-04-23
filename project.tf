@@ -9,8 +9,9 @@ resource "random_id" "id" {
 }
 
 resource "google_project" "project" {
-  name       = var.project_name
-  project_id = random_id.id.hex
+  name                = var.project_name
+  project_id          = random_id.id.hex
+  auto_create_network = false
 }
 
 output "project_id" {
