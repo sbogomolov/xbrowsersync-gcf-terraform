@@ -88,8 +88,8 @@ resource "google_cloudbuild_trigger" "deploy-trigger" {
       for_each = var.function_names
 
       content {
-        name    = "gcr.io/cloud-builders/gcloud"
-        args    = [
+        name = "gcr.io/cloud-builders/gcloud"
+        args = [
           "functions",
           "deploy",
           step.value,
@@ -109,4 +109,10 @@ resource "google_cloudbuild_trigger" "deploy-trigger" {
     google_project_iam_member.cloud-builder,
     google_cloudfunctions_function.function,
   ]
+}
+
+resource "google_app_engine_application" "firestore" {
+  project       = var.project_id
+  location_id   = var.location_id
+  database_type = "CLOUD_FIRESTORE"
 }
