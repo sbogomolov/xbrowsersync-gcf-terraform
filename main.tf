@@ -18,15 +18,17 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
-resource "google_cloudfunctions_function" "info" {
-  name    = "info"
+resource "google_cloudfunctions_function" "function" {
+  for_each = toset(var.function_names)
+
+  name    = each.key
   runtime = "python39"
 
   available_memory_mb = 128
   max_instances       = 1
   timeout             = 10
   trigger_http        = true
-  entry_point         = "info"
+  entry_point         = each.key
 
   source_repository {
     url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/paths/"
@@ -35,7 +37,7 @@ resource "google_cloudfunctions_function" "info" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_cloudfunctions_function_iam_member" "invoker" {
+resource "google_cloudfunctions_function_iam_member" "function_invoker" {
   for_each = toset(var.function_names)
 
   project        = var.project_id
