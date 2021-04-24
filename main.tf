@@ -18,20 +18,6 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
-data "google_project" "project" {
-}
-
-resource "google_project_iam_member" "cloud-builder" {
-  for_each = toset([
-    "roles/iam.serviceAccountUser",
-    "roles/cloudfunctions.developer",
-  ])
-  role   = each.key
-  member = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
-
-  depends_on = [google_project_service.service]
-}
-
 resource "google_cloudfunctions_function" "function" {
   for_each = toset(var.function_names)
 
@@ -66,4 +52,40 @@ resource "google_cloudfunctions_function_iam_member" "function_invoker" {
   member = "allUsers"
 
   depends_on = [google_cloudfunctions_function.function]
+}
+
+data "google_project" "project" {
+}
+
+resource "google_project_iam_member" "cloud-builder" {
+  for_each = toset([
+    "roles/iam.serviceAccountUser",
+    "roles/cloudfunctions.developer",
+  ])
+  role   = each.key
+  member = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+
+  depends_on = [google_project_service.service]
+}
+
+resource "google_cloudbuild_trigger" "filename-trigger" {
+  trigger_template {
+    branch_name = "master"
+    repo_name   = var.repository_name
+  }
+
+  build {
+    step {
+      for_each = toset(var.function_names)
+      name     = "gcr.io/cloud-builders/gcloud"
+      args     = ["functions", "deploy", each.key, "HTTP", "--runtime", "python39", "--entry-point", each.key]
+      timeout  = "120s"
+    }
+  }
+
+  depends_on = [
+    google_project_service.service,
+    google_project_iam_member.cloud-builder,
+    google_cloudfunctions_function.function,
+  ]
 }
