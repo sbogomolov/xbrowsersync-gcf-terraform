@@ -24,6 +24,8 @@ resource "google_cloudfunctions_function" "info" {
   region  = "us-central1" # Currently can be only "us-central1"
 
   available_memory_mb = 128
+  max_instances       = 1
+  timeout             = 10
   trigger_http        = true
   entry_point         = "info"
 
