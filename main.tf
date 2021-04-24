@@ -68,7 +68,7 @@ resource "google_project_iam_member" "cloud-builder" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_cloudbuild_trigger" "filename-trigger" {
+resource "google_cloudbuild_trigger" "deploy-trigger" {
   name = "deploy-functions"
 
   trigger_template {
