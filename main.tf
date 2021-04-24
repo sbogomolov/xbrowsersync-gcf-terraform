@@ -57,7 +57,7 @@ resource "google_cloudfunctions_function" "function" {
   entry_point         = each.value
 
   source_repository {
-    url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/"
+    url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master"
   }
 
   environment_variables = {
