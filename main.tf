@@ -82,7 +82,7 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
 
       content {
         name    = "gcr.io/cloud-builders/gcloud"
-        args    = ["functions", "deploy", step.value, "--trigger-http", "--runtime", "python39", "--entry-point", step.value]
+        args    = ["functions", "deploy", step.value, "--source", ".", "--trigger-http", "--runtime", "python39", "--entry-point", step.value]
         timeout = "120s"
       }
     }
