@@ -18,8 +18,12 @@ variable "repository_name" {
   type        = string
 }
 
+variable "accept_new_syncs" {
+  type = bool
+}
+
 variable "function_names" {
-  type = list(any)
+  type = list(string)
   default = [
     "info",
   ]

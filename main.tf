@@ -34,6 +34,10 @@ resource "google_cloudfunctions_function" "function" {
     url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/paths/"
   }
 
+  environment_variables = {
+    ACCEPT_NEW_SYNCS = var.accept_new_syncs
+  }
+
   depends_on = [google_project_service.service]
 }
 
