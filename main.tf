@@ -46,4 +46,6 @@ resource "google_cloudfunctions_function_iam_member" "function_invoker" {
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
+
+  depends_on = [google_cloudfunctions_function.function]
 }
