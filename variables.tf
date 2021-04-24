@@ -17,3 +17,10 @@ variable "repository_name" {
   description = "Gooogle Cloud Source repository name"
   type        = string
 }
+
+variable "function_names" {
+  type = list(any)
+  default = [
+    "info",
+  ]
+}

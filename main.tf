@@ -21,7 +21,6 @@ resource "google_project_service" "service" {
 resource "google_cloudfunctions_function" "info" {
   name    = "info"
   runtime = "python39"
-  region  = "us-central1" # Currently can be only "us-central1"
 
   available_memory_mb = 128
   max_instances       = 1
@@ -37,13 +36,11 @@ resource "google_cloudfunctions_function" "info" {
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  for_each = toset([
-    google_cloudfunctions_function.info,
-  ])
+  for_each = toset(var.function_names)
 
-  project        = each.key.project
-  region         = each.key.region
-  cloud_function = each.key.name
+  project        = var.project_id
+  region         = var.region
+  cloud_function = each.key
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
