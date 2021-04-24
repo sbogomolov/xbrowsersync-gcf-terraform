@@ -14,6 +14,6 @@ variable "zone" {
 }
 
 variable "repository_name" {
-  description = "Gooogle Cloud Source repository to build cloud functions"
+  description = "Gooogle Cloud Source repository name"
   type        = string
 }
