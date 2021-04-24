@@ -2,6 +2,7 @@ region              = "us-central1" # Currently Cloud Functions can only use "us
 zone                = "us-central1-b"
 location_id         = "us-central"
 deploy_trigger_name = "deploy-functions"
+runtime_config_name = "config"
 
 # Variables that have to be set:
 # - project_id

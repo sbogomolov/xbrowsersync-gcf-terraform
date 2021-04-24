@@ -13,6 +13,7 @@ resource "google_project_service" "service" {
     "cloudfunctions.googleapis.com",
     "cloudbuild.googleapis.com",
     "appengine.googleapis.com",
+    "runtimeconfig.googleapis.com",
   ])
   service = each.key
 
@@ -25,6 +26,21 @@ resource "google_app_engine_application" "firestore" {
   database_type = "CLOUD_FIRESTORE"
 
   depends_on = [google_project_service.service]
+}
+
+resource "google_runtimeconfig_config" "runtime_config" {
+  name        = var.runtime_config_name
+  description = "Runtime configuration values for cloud functions"
+
+  depends_on = [google_project_service.service]
+}
+
+resource "google_runtimeconfig_variable" "accept_new_syncs" {
+  parent = google_runtimeconfig_config.runtime_config.name
+  name   = "accept_new_syncs"
+  text   = var.accept_new_syncs
+
+  depends_on = [google_runtimeconfig_config.runtime_config]
 }
 
 resource "google_cloudfunctions_function" "function" {
@@ -44,7 +60,7 @@ resource "google_cloudfunctions_function" "function" {
   }
 
   environment_variables = {
-    ACCEPT_NEW_SYNCS = var.accept_new_syncs
+    RUNTIME_CONFIG_NAME = google_runtimeconfig_config.runtime_config.name
   }
 
   lifecycle {
@@ -57,6 +73,7 @@ resource "google_cloudfunctions_function" "function" {
   depends_on = [
     google_project_service.service,
     google_app_engine_application.firestore,
+    google_runtimeconfig_config.runtime_config,
   ]
 }
 
@@ -76,7 +93,7 @@ resource "google_cloudfunctions_function_iam_member" "function_invoker" {
 data "google_project" "project" {
 }
 
-resource "google_project_iam_member" "cloud-builder" {
+resource "google_project_iam_member" "cloud_builder" {
   for_each = toset([
     "roles/iam.serviceAccountUser",
     "roles/cloudfunctions.developer",
@@ -87,7 +104,7 @@ resource "google_project_iam_member" "cloud-builder" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_cloudbuild_trigger" "deploy-trigger" {
+resource "google_cloudbuild_trigger" "deploy_trigger" {
   name = var.deploy_trigger_name
 
   trigger_template {
@@ -118,7 +135,7 @@ resource "google_cloudbuild_trigger" "deploy-trigger" {
 
   depends_on = [
     google_project_service.service,
-    google_project_iam_member.cloud-builder,
+    google_project_iam_member.cloud_builder,
     google_cloudfunctions_function.function,
   ]
 }

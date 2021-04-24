@@ -23,6 +23,11 @@ variable "deploy_trigger_name" {
   type        = string
 }
 
+variable "runtime_config_name" {
+  description = "Gooogle Runtime Configuration name"
+  type        = string
+}
+
 variable "repository_name" {
   description = "Gooogle Cloud Source repository name"
   type        = string
