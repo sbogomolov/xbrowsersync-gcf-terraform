@@ -19,6 +19,14 @@ resource "google_project_service" "service" {
   disable_dependent_services = true
 }
 
+resource "google_app_engine_application" "firestore" {
+  project       = var.project_id
+  location_id   = var.location_id
+  database_type = "CLOUD_FIRESTORE"
+
+  depends_on = [google_project_service.service]
+}
+
 resource "google_cloudfunctions_function" "function" {
   for_each = toset(var.function_names)
 
@@ -46,7 +54,10 @@ resource "google_cloudfunctions_function" "function" {
     ]
   }
 
-  depends_on = [google_project_service.service]
+  depends_on = [
+    google_project_service.service,
+    google_app_engine_application.firestore,
+  ]
 }
 
 resource "google_cloudfunctions_function_iam_member" "function_invoker" {
@@ -110,12 +121,4 @@ resource "google_cloudbuild_trigger" "deploy-trigger" {
     google_project_iam_member.cloud-builder,
     google_cloudfunctions_function.function,
   ]
-}
-
-resource "google_app_engine_application" "firestore" {
-  project       = var.project_id
-  location_id   = var.location_id
-  database_type = "CLOUD_FIRESTORE"
-
-  depends_on = [google_project_service.service]
 }
