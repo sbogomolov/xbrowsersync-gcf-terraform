@@ -35,3 +35,16 @@ resource "google_cloudfunctions_function" "info" {
 
   depends_on = [google_project_service.service]
 }
+
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+  for_each = toset([
+    google_cloudfunctions_function.info,
+  ])
+
+  project        = each.key.project
+  region         = each.key.region
+  cloud_function = each.key.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
+}
