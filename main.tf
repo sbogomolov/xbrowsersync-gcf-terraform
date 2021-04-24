@@ -69,6 +69,8 @@ resource "google_project_iam_member" "cloud-builder" {
 }
 
 resource "google_cloudbuild_trigger" "filename-trigger" {
+  name = "deploy-functions"
+
   trigger_template {
     branch_name = "master"
     repo_name   = var.repository_name
