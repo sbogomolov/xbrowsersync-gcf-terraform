@@ -18,6 +18,16 @@ variable "zone" {
   type        = string
 }
 
+variable "deploy_trigger_name" {
+  description = "The name for function deploy trigger"
+  type        = string
+}
+
+variable "firestore_app_name" {
+  description = "The name for Google App Engine application with firestore database"
+  type        = string
+}
+
 variable "repository_name" {
   description = "Gooogle Cloud Source repository name"
   type        = string

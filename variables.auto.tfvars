@@ -1,6 +1,8 @@
-region      = "us-central1" # Currently Cloud Functions can only use "us-central1"
-zone        = "us-central1-b"
-location_id = "us-central"
+region              = "us-central1" # Currently Cloud Functions can only use "us-central1"
+zone                = "us-central1-b"
+location_id         = "us-central"
+deploy_trigger_name = "deploy-functions"
+firestore_app_name  = "firestore"
 
 # Variables that have to be set:
 # - project_id

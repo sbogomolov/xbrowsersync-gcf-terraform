@@ -76,7 +76,7 @@ resource "google_project_iam_member" "cloud-builder" {
 }
 
 resource "google_cloudbuild_trigger" "deploy-trigger" {
-  name = "deploy-functions"
+  name = var.deploy_trigger_name
 
   trigger_template {
     branch_name = "master"
@@ -114,5 +114,6 @@ resource "google_cloudbuild_trigger" "deploy-trigger" {
 resource "google_app_engine_application" "firestore" {
   project       = var.project_id
   location_id   = var.location_id
+  name          = var.firestore_app_name
   database_type = "CLOUD_FIRESTORE"
 }
