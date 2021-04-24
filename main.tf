@@ -31,11 +31,18 @@ resource "google_cloudfunctions_function" "function" {
   entry_point         = each.key
 
   source_repository {
-    url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/paths/"
+    url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/"
   }
 
   environment_variables = {
     ACCEPT_NEW_SYNCS = var.accept_new_syncs
+  }
+
+  lifecycle {
+    ignore_changes = [
+      labels,
+      source_repository,
+    ]
   }
 
   depends_on = [google_project_service.service]
