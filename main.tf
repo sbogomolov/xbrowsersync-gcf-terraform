@@ -4,6 +4,15 @@ provider "google" {
   zone    = var.zone
 }
 
+locals {
+  functions = {
+    for f in var.functions : f.name => f.entry_point
+  }
+}
+
+data "google_project" "project" {
+}
+
 resource "google_project_service" "service" {
   for_each = toset([
     "cloudresourcemanager.googleapis.com",
@@ -44,7 +53,7 @@ resource "google_runtimeconfig_variable" "accept_new_syncs" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  for_each = toset(var.function_names)
+  for_each = local.functions
 
   name    = each.key
   runtime = "python39"
@@ -53,7 +62,7 @@ resource "google_cloudfunctions_function" "function" {
   max_instances       = 1
   timeout             = 10
   trigger_http        = true
-  entry_point         = each.key
+  entry_point         = each.value
 
   source_repository {
     url = "https://source.developers.google.com/projects/${var.project_id}/repos/${var.repository_name}/moveable-aliases/master/"
@@ -78,7 +87,7 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_cloudfunctions_function_iam_member" "function_invoker" {
-  for_each = toset(var.function_names)
+  for_each = local.functions
 
   project        = var.project_id
   region         = var.region
@@ -88,9 +97,6 @@ resource "google_cloudfunctions_function_iam_member" "function_invoker" {
   member = "allUsers"
 
   depends_on = [google_cloudfunctions_function.function]
-}
-
-data "google_project" "project" {
 }
 
 resource "google_project_iam_member" "cloud_builder" {
@@ -114,19 +120,19 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
 
   build {
     dynamic "step" {
-      for_each = var.function_names
+      for_each = var.functions
 
       content {
         name = "gcr.io/cloud-builders/gcloud"
         args = [
           "functions",
           "deploy",
-          step.value,
+          step.value.name,
           "--source=.",
           "--trigger-http",
           "--security-level=secure-always",
           "--runtime=python39",
-          "--entry-point=${step.value}",
+          "--entry-point=${step.value.entry_point}",
         ]
         timeout = "300s"
       }

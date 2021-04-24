@@ -37,9 +37,19 @@ variable "accept_new_syncs" {
   type = bool
 }
 
-variable "function_names" {
-  type = list(string)
+variable "functions" {
+  type = list(object({
+    name        = string
+    entry_point = string
+  }))
   default = [
-    "info",
+    {
+      name        = "info"
+      entry_point = "info"
+    },
+    {
+      name        = "bookmarks"
+      entry_point = "bookmarks"
+    },
   ]
 }
