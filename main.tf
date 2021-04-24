@@ -75,11 +75,14 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
   }
 
   build {
-    step {
-      for_each = toset(var.function_names)
-      name     = "gcr.io/cloud-builders/gcloud"
-      args     = ["functions", "deploy", each.key, "HTTP", "--runtime", "python39", "--entry-point", each.key]
-      timeout  = "120s"
+    dynamic "step" {
+      for_each = var.function_names
+
+      content {
+        name    = "gcr.io/cloud-builders/gcloud"
+        args    = ["functions", "deploy", step.value, "HTTP", "--runtime", "python39", "--entry-point", step.value]
+        timeout = "120s"
+      }
     }
   }
 
