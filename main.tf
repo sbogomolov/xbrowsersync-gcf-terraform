@@ -127,6 +127,10 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
         timeout = "300s"
       }
     }
+
+    options {
+      machine_type = "UNSPECIFIED"
+    }
   }
 
   depends_on = [
