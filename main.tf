@@ -128,7 +128,7 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
           "--runtime=python39",
           "--entry-point=${step.value}",
         ]
-        timeout = "120s"
+        timeout = "300s"
       }
     }
   }
