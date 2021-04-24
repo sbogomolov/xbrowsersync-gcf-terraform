@@ -4,12 +4,6 @@ provider "google" {
   zone    = var.zone
 }
 
-locals {
-  functions = {
-    for f in var.functions : f.name => f.entry_point
-  }
-}
-
 data "google_project" "project" {
 }
 
@@ -48,12 +42,10 @@ resource "google_runtimeconfig_variable" "accept_new_syncs" {
   parent = google_runtimeconfig_config.runtime_config.name
   name   = "accept_new_syncs"
   text   = var.accept_new_syncs
-
-  depends_on = [google_runtimeconfig_config.runtime_config]
 }
 
 resource "google_cloudfunctions_function" "function" {
-  for_each = local.functions
+  for_each = { for f in var.functions : f.name => f.entry_point }
 
   name    = each.key
   runtime = "python39"
@@ -82,21 +74,18 @@ resource "google_cloudfunctions_function" "function" {
   depends_on = [
     google_project_service.service,
     google_app_engine_application.firestore,
-    google_runtimeconfig_config.runtime_config,
   ]
 }
 
 resource "google_cloudfunctions_function_iam_member" "function_invoker" {
-  for_each = local.functions
+  for_each = { for f in google_cloudfunctions_function.function : f.name => f }
 
-  project        = var.project_id
-  region         = var.region
+  project        = each.value.project
+  region         = each.value.region
   cloud_function = each.key
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
-
-  depends_on = [google_cloudfunctions_function.function]
 }
 
 resource "google_project_iam_member" "cloud_builder" {
@@ -120,7 +109,7 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
 
   build {
     dynamic "step" {
-      for_each = var.functions
+      for_each = google_cloudfunctions_function.function
 
       content {
         name = "gcr.io/cloud-builders/gcloud"
@@ -142,6 +131,5 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
   depends_on = [
     google_project_service.service,
     google_project_iam_member.cloud_builder,
-    google_cloudfunctions_function.function,
   ]
 }
