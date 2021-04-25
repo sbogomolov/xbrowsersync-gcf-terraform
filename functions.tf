@@ -1,4 +1,4 @@
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "functions" {
   for_each = { for f in var.functions : f.name => f.entry_point }
 
   name    = each.key
@@ -26,13 +26,13 @@ resource "google_cloudfunctions_function" "function" {
   }
 
   depends_on = [
-    google_project_service.service,
+    google_project_service.services,
     google_app_engine_application.firestore,
   ]
 }
 
-resource "google_cloudfunctions_function_iam_member" "function_invoker" {
-  for_each = { for f in google_cloudfunctions_function.function : f.name => f }
+resource "google_cloudfunctions_function_iam_member" "function_invokers" {
+  for_each = { for f in google_cloudfunctions_function.functions : f.name => f }
 
   project        = each.value.project
   region         = each.value.region

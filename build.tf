@@ -6,7 +6,7 @@ resource "google_project_iam_member" "cloud_builder" {
   role   = each.key
   member = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 
-  depends_on = [google_project_service.service]
+  depends_on = [google_project_service.services]
 }
 
 resource "google_cloudbuild_trigger" "deploy_trigger" {
@@ -19,7 +19,7 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
 
   build {
     dynamic "step" {
-      for_each = google_cloudfunctions_function.function
+      for_each = google_cloudfunctions_function.functions
 
       content {
         name = "gcr.io/cloud-builders/gcloud"
@@ -39,7 +39,7 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
   }
 
   depends_on = [
-    google_project_service.service,
+    google_project_service.services,
     google_project_iam_member.cloud_builder,
   ]
 }

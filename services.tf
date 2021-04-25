@@ -1,4 +1,4 @@
-resource "google_project_service" "service" {
+resource "google_project_service" "services" {
   for_each = toset([
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",

@@ -2,7 +2,7 @@ resource "google_runtimeconfig_config" "runtime_config" {
   name        = var.runtime_config_name
   description = "Runtime configuration values for cloud functions"
 
-  depends_on = [google_project_service.service]
+  depends_on = [google_project_service.services]
 }
 
 resource "google_runtimeconfig_variable" "accept_new_syncs" {
