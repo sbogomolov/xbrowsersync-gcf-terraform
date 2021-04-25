@@ -34,7 +34,8 @@ variable "repository_name" {
 }
 
 variable "accept_new_syncs" {
-  type = bool
+  description = "Initial state of new sync acceptance for the server"
+  type        = bool
 }
 
 variable "functions" {
