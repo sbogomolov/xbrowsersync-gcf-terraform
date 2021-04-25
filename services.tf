@@ -3,7 +3,6 @@ resource "google_project_service" "services" {
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
     "serviceusage.googleapis.com",
-    "sourcerepo.googleapis.com",
     "cloudfunctions.googleapis.com",
     "cloudbuild.googleapis.com",
     "appengine.googleapis.com",
