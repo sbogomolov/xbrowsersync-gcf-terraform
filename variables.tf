@@ -28,11 +28,6 @@ variable "runtime_config_name" {
   type        = string
 }
 
-variable "repository_name" {
-  description = "Gooogle Cloud Source repository name"
-  type        = string
-}
-
 variable "runtime" {
   description = "Runtim for Google Cloud Functions"
   type        = string
@@ -41,6 +36,11 @@ variable "runtime" {
 variable "accept_new_syncs" {
   description = "Initial state of new sync acceptance for the server"
   type        = bool
+}
+
+variable "repository_name" {
+  description = "Gooogle Cloud Source repository name"
+  type        = string
 }
 
 variable "functions" {
