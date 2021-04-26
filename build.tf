@@ -30,7 +30,7 @@ resource "google_cloudbuild_trigger" "deploy_trigger" {
           "--source=.",
           "--trigger-http",
           "--security-level=secure-always",
-          "--runtime=python39",
+          "--runtime=${var.runtime}",
           "--entry-point=${step.value.entry_point}",
         ]
         timeout = "300s"

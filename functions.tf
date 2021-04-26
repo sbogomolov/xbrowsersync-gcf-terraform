@@ -2,7 +2,7 @@ resource "google_cloudfunctions_function" "functions" {
   for_each = { for f in var.functions : f.name => f.entry_point }
 
   name    = each.key
-  runtime = "python39"
+  runtime = var.runtime
 
   available_memory_mb = 128
   max_instances       = 1
